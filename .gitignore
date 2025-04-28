@@ -1,2 +1,5 @@
 test/
 archive/
+.vscode/
+__pycache__/
+new.txt
