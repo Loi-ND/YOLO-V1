@@ -112,6 +112,9 @@ def main():
 
     for epoch in range(EPOCHS):
 
+        
+        train_fn(train_loader, model, optimizer, loss_fn)
+
         pred_boxes, target_boxes = get_bboxes(
             train_loader, model, iou_threshold=0.5, threshold=0.4, device=DEVICE
         )
@@ -126,9 +129,6 @@ def main():
                "optimizer": optimizer.state_dict(),
            }
         save_checkpoint(checkpoint, filename=LOAD_MODEL_FILE)
-
-
-        train_fn(train_loader, model, optimizer, loss_fn)
 
 
 if __name__ == "__main__":
