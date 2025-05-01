@@ -78,7 +78,7 @@ def main():
         load_checkpoint(torch.load(LOAD_MODEL_FILE), model, optimizer)
 
     train_dataset = VOCDataset(
-        "archive/100examples.csv",
+        "archive/train.csv",
         transform=transform,
         img_dir=IMG_DIR,
         label_dir=LABEL_DIR,
@@ -107,15 +107,6 @@ def main():
     )
 
     for epoch in range(EPOCHS):
-        # for x, y in train_loader:
-        #    x = x.to(DEVICE)
-        #    for idx in range(8):
-        #        bboxes = cellboxes_to_boxes(model(x))
-        #        bboxes = non_max_suppression(bboxes[idx], iou_threshold=0.5, threshold=0.4, box_format="midpoint")
-        #        plot_image(x[idx].permute(1,2,0).to("cpu"), bboxes)
-
-        #    import sys
-        #    sys.exit()
 
         pred_boxes, target_boxes = get_bboxes(
             train_loader, model, iou_threshold=0.5, threshold=0.4, device=DEVICE
@@ -126,14 +117,12 @@ def main():
         )
         print(f"Train mAP: {mean_avg_prec}")
 
-        #if mean_avg_prec > 0.9:
-        #    checkpoint = {
-        #        "state_dict": model.state_dict(),
-        #        "optimizer": optimizer.state_dict(),
-        #    }
-        #    save_checkpoint(checkpoint, filename=LOAD_MODEL_FILE)
-        #    import time
-        #    time.sleep(10)
+        checkpoint = {
+               "state_dict": model.state_dict(),
+               "optimizer": optimizer.state_dict(),
+           }
+        save_checkpoint(checkpoint, filename=LOAD_MODEL_FILE)
+
 
         train_fn(train_loader, model, optimizer, loss_fn)
 
